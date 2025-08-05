@@ -50,7 +50,7 @@ const AuthTest = () => {
 
   return (
     <div style={{ padding: '20px', maxWidth: '400px', margin: '0 auto' }}>
-      <h2>Authentication Test</h2>
+      <h2>Welcome to Book Principles App</h2>
       
       <div style={{ marginBottom: '15px' }}>
         <input

@@ -11,7 +11,7 @@ import './App.css';
 
 function AppContent() {
   const { user, loading } = useAuth();
-  const [currentView, setCurrentView] = useState('auth'); // 'auth', 'upload', 'enhanced-upload', 'library', 'stats', 'config'
+  const [currentView, setCurrentView] = useState('upload'); // 'auth', 'upload', 'enhanced-upload', 'library', 'stats', 'config'
   const [authView, setAuthView] = useState('web'); // 'web' or 'mobile'
 
   const renderAuthView = () => {
