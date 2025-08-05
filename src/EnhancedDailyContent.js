@@ -1,7 +1,7 @@
 // EnhancedDailyContent.js - Enhanced Daily Content with Progress Tracking, Streaks, Notes, and Sharing
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
-import { saveUserNote, getUserNotes } from './bookService';
+import { saveUserNote, getUserNotes, addAdditionalDailyContent } from './bookService';
 import { generateAdditionalDailyContent } from './openaiService';
 
 const EnhancedDailyContent = ({ book, onClose }) => {
@@ -92,10 +92,31 @@ const EnhancedDailyContent = ({ book, onClose }) => {
       setIsLoading(true);
       try {
         const additionalContent = await generateAdditionalDailyContent(book, book.totalDays, 10);
-        // Update book with new content (this would need to be implemented in bookService)
-        console.log('Additional content generated:', additionalContent);
+        
+        // Update the book with additional content
+        const updatedDailyContent = await addAdditionalDailyContent(book.id, additionalContent);
+        
+        // Update the local book state with new content
+        const updatedBook = {
+          ...book,
+          dailyContent: updatedDailyContent,
+          totalDays: updatedDailyContent.length
+        };
+        
+        // Force a re-render by updating the book prop (this will trigger useEffect)
+        // We'll need to pass this update back to the parent component
+        if (onClose) {
+          // Refresh the book data in the parent component
+          onClose();
+        }
+        
+        // Advance to the next day
+        setCurrentDay(currentDay + 1);
+        
       } catch (error) {
         console.error('Error generating additional content:', error);
+        // If generation fails, still advance to next day with fallback content
+        setCurrentDay(currentDay + 1);
       } finally {
         setIsLoading(false);
       }
@@ -127,7 +148,7 @@ const EnhancedDailyContent = ({ book, onClose }) => {
 
   const shareProgress = async (platform) => {
     const progressText = `📚 Reading Progress: "${book.title}" by ${book.author}
-📅 Day ${currentDay} of ${book.totalDays}
+📅 Day ${currentDay}${book.totalDays ? ` of ${book.totalDays}` : ''}
 🔥 Streak: ${streak} days
 ✅ Completion: ${completionRate}%
 💭 Today's lesson: ${getDailyContent(currentDay)?.lesson}`;
@@ -425,7 +446,7 @@ const EnhancedDailyContent = ({ book, onClose }) => {
                 <div 
                   style={{
                     ...styles.progressFill,
-                    width: `${(currentDay / book.totalDays) * 100}%`
+                    width: `${Math.min((currentDay / book.totalDays) * 100, 100)}%`
                   }}
                 />
               </div>
@@ -458,11 +479,10 @@ const EnhancedDailyContent = ({ book, onClose }) => {
             >
               ← Previous Day
             </button>
-            <div style={styles.dayIndicator}>Day {currentDay}</div>
+            <div style={styles.dayIndicator}>Day {currentDay} {book.totalDays && `of ${book.totalDays}`}</div>
             <button 
               style={styles.navButton}
               onClick={handleNextDay}
-              disabled={currentDay >= book.totalDays}
             >
               Next Day →
             </button>
