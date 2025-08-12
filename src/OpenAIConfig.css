@@ -64,6 +64,17 @@
   font-size: 14px;
 }
 
+.status-details {
+  margin: 0 0 15px 0;
+  padding: 8px 12px;
+  background-color: #e3f2fd;
+  border-radius: 6px;
+  color: #1976d2;
+  font-size: 13px;
+  font-style: italic;
+  border-left: 3px solid #2196f3;
+}
+
 .test-section {
   margin-top: 15px;
 }

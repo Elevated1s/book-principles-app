@@ -62,6 +62,9 @@ const OpenAIConfig = () => {
       <div className="config-section">
         <h3>Current Status</h3>
         <p className="status-message">{status.message}</p>
+        {status.details && (
+          <p className="status-details">{status.details}</p>
+        )}
         
         {status.configured && (
           <div className="test-section">

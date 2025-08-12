@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AuthTest from './AuthTest';
 import MobileAuthTest from './MobileAuthTest';
 import BookUpload from './BookUpload';
@@ -6,13 +6,21 @@ import EnhancedBookUpload from './EnhancedBookUpload';
 import UserLibrary from './UserLibrary';
 import UserStats from './UserStats';
 import OpenAIConfig from './OpenAIConfig';
+import AIStatusIndicator from './AIStatusIndicator';
 import { AuthProvider, useAuth } from './AuthContext';
 import './App.css';
 
 function AppContent() {
-  const { user, loading } = useAuth();
-  const [currentView, setCurrentView] = useState('upload'); // 'auth', 'upload', 'enhanced-upload', 'library', 'stats', 'config'
+  const { user, loading, logout } = useAuth();
+  const [currentView, setCurrentView] = useState('auth'); // 'auth', 'upload', 'enhanced-upload', 'library', 'stats', 'config'
   const [authView, setAuthView] = useState('web'); // 'web' or 'mobile'
+
+  // Auto-redirect to library when user signs in
+  useEffect(() => {
+    if (user && currentView === 'auth') {
+      setCurrentView('library');
+    }
+  }, [user, currentView]);
 
   const renderAuthView = () => {
     return (
@@ -65,109 +73,103 @@ function AppContent() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Book Principles App</h1>
-        <p>Extract Key Principles from Books</p>
+        <h1 style={{ 
+          fontSize: '2.5rem', 
+          fontWeight: '800', 
+          marginBottom: '10px',
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          textShadow: '0 2px 4px rgba(0,0,0,0.1)'
+        }}>
+          📚 Book Principles App
+        </h1>
+        <p style={{ 
+          fontSize: '1.1rem', 
+          color: '#fff', 
+          marginBottom: '20px',
+          opacity: 0.9
+        }}>
+          Transform Books into Daily Wisdom ✨
+        </p>
         
         {user && (
           <div style={{ marginBottom: '10px', color: '#fff', fontSize: '14px' }}>
             Welcome, {user.email || user.phoneNumber || 'User'}!
+            <button 
+              onClick={logout}
+              style={{
+                marginLeft: '15px',
+                padding: '4px 12px',
+                backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                color: '#fff',
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+                borderRadius: '20px',
+                cursor: 'pointer',
+                fontSize: '12px',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseOver={(e) => {
+                e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
+                e.target.style.transform = 'scale(1.05)';
+              }}
+              onMouseOut={(e) => {
+                e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+                e.target.style.transform = 'scale(1)';
+              }}
+            >
+              🚪 Logout
+            </button>
+          </div>
+        )}
+        
+        {/* Global AI Status Indicator */}
+        {user && (
+          <div style={{ marginBottom: '20px' }}>
+            <AIStatusIndicator compact={true} showDetails={false} />
           </div>
         )}
         
         {/* Navigation */}
-        <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap' }}>
+        <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center', gap: '15px', flexWrap: 'wrap' }}>
           {!user ? (
             <button 
               onClick={() => setCurrentView('auth')}
-              style={{ 
-                padding: '10px 20px',
-                backgroundColor: currentView === 'auth' ? '#007AFF' : '#ccc',
-                color: 'white',
-                border: 'none',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                fontSize: '14px',
-                fontWeight: '600'
-              }}
+              className={`nav-button ${currentView === 'auth' ? 'active' : ''}`}
             >
-              Sign In
+              🚀 Sign In
             </button>
           ) : (
             <>
               <button 
                 onClick={() => setCurrentView('library')}
-                style={{ 
-                  padding: '10px 20px',
-                  backgroundColor: currentView === 'library' ? '#007AFF' : '#ccc',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  fontWeight: '600'
-                }}
+                className={`nav-button ${currentView === 'library' ? 'active' : ''}`}
               >
-                My Library
+                📚 My Library
               </button>
-                            <button
+              <button
                 onClick={() => setCurrentView('upload')}
-                style={{
-                  padding: '10px 20px',
-                  backgroundColor: currentView === 'upload' ? '#007AFF' : '#ccc',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  fontWeight: '600'
-                }}
+                className={`nav-button ${currentView === 'upload' ? 'active' : ''}`}
               >
-                Upload Book
+                📖 Upload Book
               </button>
               <button
                 onClick={() => setCurrentView('enhanced-upload')}
-                style={{
-                  padding: '10px 20px',
-                  backgroundColor: currentView === 'enhanced-upload' ? '#007AFF' : '#ccc',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  fontWeight: '600'
-                }}
+                className={`nav-button ${currentView === 'enhanced-upload' ? 'active' : ''}`}
               >
-                Advanced Upload
+                🚀 Advanced Upload
               </button>
               <button 
                 onClick={() => setCurrentView('stats')}
-                style={{ 
-                  padding: '10px 20px',
-                  backgroundColor: currentView === 'stats' ? '#007AFF' : '#ccc',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  fontWeight: '600'
-                }}
+                className={`nav-button ${currentView === 'stats' ? 'active' : ''}`}
               >
                 📊 Statistics
               </button>
               <button 
                 onClick={() => setCurrentView('config')}
-                style={{ 
-                  padding: '10px 20px',
-                  backgroundColor: currentView === 'config' ? '#007AFF' : '#ccc',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  fontWeight: '600'
-                }}
+                className={`nav-button ${currentView === 'config' ? 'active' : ''}`}
               >
-                AI Settings
+                ⚙️ AI Settings
               </button>
             </>
           )}
@@ -176,13 +178,23 @@ function AppContent() {
       
       <main>
         {!user ? (
-          currentView === 'auth' ? renderAuthView() : <div>Please sign in to continue</div>
+          currentView === 'auth' ? (
+            <div className="card">
+              {renderAuthView()}
+            </div>
+          ) : (
+            <div className="card">
+              <div>Please sign in to continue</div>
+            </div>
+          )
         ) : (
-          currentView === 'library' ? <UserLibrary /> :
-          currentView === 'stats' ? <UserStats /> :
-          currentView === 'config' ? <OpenAIConfig /> :
-          currentView === 'enhanced-upload' ? <EnhancedBookUpload /> :
-          <BookUpload />
+          <div className="card">
+            {currentView === 'library' ? <UserLibrary /> :
+             currentView === 'stats' ? <UserStats /> :
+             currentView === 'config' ? <OpenAIConfig /> :
+             currentView === 'enhanced-upload' ? <EnhancedBookUpload /> :
+             <BookUpload />}
+          </div>
         )}
       </main>
     </div>

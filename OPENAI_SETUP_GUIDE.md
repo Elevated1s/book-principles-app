@@ -27,16 +27,18 @@ If you prefer to use environment variables:
 
 ## What You Get
 
-✅ **Real AI Analysis**: Books are analyzed using GPT-3.5-turbo  
+✅ **Real AI Analysis**: Books are analyzed using GPT-4o-mini (latest model)  
 ✅ **File Processing**: Upload text files for content analysis  
 ✅ **Smart Summaries**: AI-generated book summaries and insights  
 ✅ **Daily Content**: Personalized daily content from your books  
 ✅ **Fallback Mode**: Works even without API key (simulated content)  
+✅ **Enhanced Error Handling**: Clear, actionable error messages  
+✅ **Real-time Status**: Live AI configuration status with helpful guidance  
 
 ## Cost Information
 
-- **GPT-3.5-turbo**: ~$0.002 per 1K tokens
-- **Typical book analysis**: ~$0.01-0.05 per book
+- **GPT-4o-mini**: ~$0.00015 per 1K tokens (very cost-effective!)
+- **Typical book analysis**: ~$0.001-0.005 per book (much cheaper than before)
 - **Free tier**: $5 credit for new users
 - **Pay-as-you-go**: No monthly fees
 
@@ -46,11 +48,13 @@ If you prefer to use environment variables:
 - Make sure you saved the key in the app
 - Check that the key starts with `sk-`
 - Try the test connection button
+- Check the detailed status message for guidance
 
 **"Connection failed"**
 - Verify your API key is correct
 - Check your OpenAI account has credits
 - Ensure the key has the necessary permissions
+- Look for specific error messages in the status
 
 ## Security Note
 
@@ -58,4 +62,4 @@ The API key is stored in your browser's localStorage for development. For produc
 
 ---
 
-**Ready to start?** Open your app and click "AI Settings" to configure your OpenAI API key! 
+**Ready to start?** Open your app and click "AI Settings" to configure your OpenAI API key, or check the upload page for real-time AI status! 

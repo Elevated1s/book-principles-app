@@ -4,6 +4,7 @@ import { useAuth } from './AuthContext';
 import { addBookToLibrary } from './bookService';
 import { processBookWithAI } from './aiService';
 import { extractTextFromFile } from './openaiService';
+import AIStatusIndicator from './AIStatusIndicator';
 import { 
   extractContentFromUrl, 
   lookupBookByIsbn, 
@@ -452,6 +453,9 @@ const EnhancedBookUpload = () => {
   return (
     <div style={styles.container}>
       <h1 style={styles.title}>Upload Your Book</h1>
+      
+      {/* AI Status Indicator */}
+      <AIStatusIndicator />
       
       <div style={styles.methodSelector}>
         <button

@@ -1,0 +1,4 @@
+com.digitalelevations.bookprinciples.test.app-androidTest-0 C:\Users\curti\New folder\BookPrinciplesApp\app\build\generated\res\resValues\androidTest\debug
+com.digitalelevations.bookprinciples.test.app-mergeDebugAndroidTestResources-1 C:\Users\curti\New folder\BookPrinciplesApp\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\merged.dir
+com.digitalelevations.bookprinciples.test.app-mergeDebugAndroidTestResources-2 C:\Users\curti\New folder\BookPrinciplesApp\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\stripped.dir
+com.digitalelevations.bookprinciples.test.app-merged_res-3 C:\Users\curti\New folder\BookPrinciplesApp\app\build\intermediates\merged_res\debugAndroidTest

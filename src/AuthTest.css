@@ -1,0 +1,126 @@
+.auth-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 30px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.auth-container h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 30px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.auth-button {
+  margin-right: 10px;
+  padding: 15px 25px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.auth-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.auth-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.auth-button.primary {
+  background-color: #667eea;
+  color: white;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.auth-button.google {
+  background-color: #4285f4;
+  color: white;
+  box-shadow: 0 4px 15px rgba(66, 133, 244, 0.4);
+  width: 100%;
+  margin-right: 0;
+  margin-bottom: 20px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.auth-input {
+  padding: 15px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+.auth-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.auth-toggle {
+  background: none;
+  border: none;
+  color: #667eea;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.auth-toggle:hover {
+  color: #5a67d8;
+}
+
+.disclaimer {
+  font-size: 10px;
+  line-height: 1.4;
+  color: #666;
+  text-align: center;
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #f7fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.error-message {
+  padding: 15px;
+  background-color: #fee;
+  color: #c53030;
+  border-radius: 12px;
+  margin-top: 20px;
+  border: 1px solid #feb2b2;
+  font-size: 14px;
+  text-align: center;
+}
+
+.success-message {
+  padding: 15px;
+  background-color: #e8f5e8;
+  color: #2f855a;
+  border-radius: 12px;
+  margin-top: 20px;
+  border: 1px solid #9ae6b4;
+  font-size: 14px;
+  text-align: center;
+}

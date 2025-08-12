@@ -6,98 +6,201 @@ import {
   signInWithGoogle, 
   logout 
 } from './authService';
+import './AuthTest.css';
 
 const AuthTest = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
+  const [name, setName] = useState('');
+  const [isSignUp, setIsSignUp] = useState(true);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSignUp = async () => {
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+    setLoading(true);
+
     try {
-      const result = await signUpWithEmail(email, password);
-      setMessage(`Sign up successful! User ID: ${result.user.uid}`);
+      const result = await signUpWithEmail(email, password, name);
+      console.log('Sign up successful:', result);
+      setSuccess(`Account created successfully! Welcome, ${result.userData?.success ? name : 'User'}!`);
+      setEmail('');
+      setPassword('');
+      setName('');
     } catch (error) {
-      setMessage(`Sign up error: ${error.message}`);
+      console.error('Sign up error:', error);
+      setError(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleSignIn = async () => {
+  const handleSignIn = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+    setLoading(true);
+
     try {
-      const result = await signInWithEmail(email, password);
-      setMessage(`Sign in successful! User ID: ${result.user.uid}`);
+      await signInWithEmail(email, password);
+      setSuccess('Signed in successfully!');
+      setEmail('');
+      setPassword('');
     } catch (error) {
-      setMessage(`Sign in error: ${error.message}`);
+      console.error('Sign in error:', error);
+      setError(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleGoogleSignIn = async () => {
+    setError('');
+    setSuccess('');
+    setLoading(true);
+
     try {
-      const result = await signInWithGoogle();
-      setMessage(`Google sign in successful! User ID: ${result.user.uid}`);
+      await signInWithGoogle();
+      setSuccess('Google sign in successful!');
     } catch (error) {
-      setMessage(`Google sign in error: ${error.message}`);
+      console.error('Google sign in error:', error);
+      setError(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleSignOut = async () => {
     try {
       await logout();
-      setMessage('Sign out successful!');
+      setSuccess('Sign out successful!');
     } catch (error) {
-      setMessage(`Sign out error: ${error.message}`);
+      setError(`Sign out error: ${error.message}`);
     }
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '400px', margin: '0 auto' }}>
-      <h2>Welcome to Book Principles App</h2>
-      
-      <div style={{ marginBottom: '15px' }}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          style={{ width: '100%', padding: '8px', marginBottom: '10px' }}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={{ width: '100%', padding: '8px', marginBottom: '10px' }}
-        />
+    <div style={{ 
+      padding: '30px', 
+      maxWidth: '450px', 
+      margin: '0 auto',
+      backgroundColor: 'white',
+      borderRadius: '20px',
+      boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+      border: '1px solid #f0f0f0'
+    }}>
+      <div className="auth-container">
+        <h2>{isSignUp ? 'Create Account' : 'Sign In'}</h2>
+        
+        {isSignUp && (
+          <form onSubmit={handleSignUp} className="auth-form">
+            <input
+              type="text"
+              placeholder="Full Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="auth-input"
+              required
+            />
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="auth-input"
+              required
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="auth-input"
+              required
+            />
+            <div style={{ marginBottom: '20px' }}>
+              <button 
+                type="submit" 
+                className="auth-button primary"
+                disabled={loading}
+              >
+                {loading ? 'Creating Account...' : 'Sign Up'}
+              </button>
+              <button 
+                type="button"
+                onClick={() => setIsSignUp(false)}
+                className="auth-toggle"
+              >
+                Already have an account? Sign In
+              </button>
+            </div>
+          </form>
+        )}
+
+        {!isSignUp && (
+          <form onSubmit={handleSignIn} className="auth-form">
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="auth-input"
+              required
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="auth-input"
+              required
+            />
+            <div style={{ marginBottom: '20px' }}>
+              <button 
+                type="submit" 
+                className="auth-button primary"
+                disabled={loading}
+              >
+                {loading ? 'Signing In...' : 'Sign In'}
+              </button>
+              <button 
+                type="button"
+                onClick={() => setIsSignUp(true)}
+                className="auth-toggle"
+              >
+                Need an account? Sign Up
+              </button>
+            </div>
+          </form>
+        )}
+
+        <div style={{ marginBottom: '20px' }}>
+          <button 
+            type="button"
+            onClick={handleGoogleSignIn}
+            className="auth-button google"
+            disabled={loading}
+          >
+            {loading ? 'Signing In...' : '🔐 Sign in with Google'}
+          </button>
+        </div>
+
+        <p className="disclaimer">
+          By signing in you agree to receive promotional emails/sms from digital elevations co.
+        </p>
       </div>
 
-      <div style={{ marginBottom: '15px' }}>
-        <button onClick={handleSignUp} style={{ marginRight: '10px', padding: '8px 16px' }}>
-          Sign Up
-        </button>
-        <button onClick={handleSignIn} style={{ marginRight: '10px', padding: '8px 16px' }}>
-          Sign In
-        </button>
-      </div>
-
-      <div style={{ marginBottom: '15px' }}>
-        <button onClick={handleGoogleSignIn} style={{ marginRight: '10px', padding: '8px 16px' }}>
-          Sign In with Google
-        </button>
-      </div>
-
-      <div style={{ marginBottom: '15px' }}>
-        <button onClick={handleSignOut} style={{ padding: '8px 16px' }}>
-          Sign Out
-        </button>
-      </div>
-
-      {message && (
-        <div style={{ 
-          padding: '10px', 
-          backgroundColor: message.includes('error') ? '#ffebee' : '#e8f5e8',
-          border: `1px solid ${message.includes('error') ? '#f44336' : '#4caf50'}`,
-          borderRadius: '4px'
-        }}>
-          {message}
+      {error && (
+        <div className="error-message">
+          {error}
+        </div>
+      )}
+      {success && (
+        <div className="success-message">
+          {success}
         </div>
       )}
     </div>

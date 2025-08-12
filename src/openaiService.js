@@ -2,9 +2,9 @@
 
 // OpenAI API Configuration
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
-const OPENAI_MODEL = 'gpt-3.5-turbo';
+const OPENAI_MODEL = 'gpt-4o-mini'; // Updated to use newer, more cost-effective model
 
-// Get API key from environment variable
+// Get API key from environment variable or localStorage
 const getAPIKey = () => {
   return process.env.REACT_APP_OPENAI_API_KEY || localStorage.getItem('openai_api_key');
 };
@@ -19,12 +19,24 @@ export const isOpenAIConfigured = () => {
 export const getAPIKeyStatus = () => {
   const apiKey = getAPIKey();
   if (!apiKey || apiKey === 'your_openai_api_key_here') {
-    return { configured: false, message: 'API key not configured' };
+    return { 
+      configured: false, 
+      message: 'OpenAI API key not configured. Add your API key to enable AI-powered book analysis.',
+      details: 'Without an API key, the app will use high-quality simulated content.'
+    };
   }
   if (!apiKey.startsWith('sk-')) {
-    return { configured: false, message: 'Invalid API key format' };
+    return { 
+      configured: false, 
+      message: 'Invalid API key format. API key should start with "sk-".',
+      details: 'Please check your API key and try again.'
+    };
   }
-  return { configured: true, message: 'API key configured' };
+  return { 
+    configured: true, 
+    message: 'OpenAI API key configured and ready to use!',
+    details: 'AI-powered book analysis is enabled.'
+  };
 };
 
 // Set API key (for manual configuration)
@@ -36,29 +48,42 @@ export const setAPIKey = (apiKey) => {
   return false;
 };
 
-// Extract text from uploaded file
+// Extract text from uploaded file with improved error handling
 export const extractTextFromFile = async (file) => {
   return new Promise((resolve, reject) => {
+    if (!file) {
+      reject(new Error('No file provided'));
+      return;
+    }
+
     const reader = new FileReader();
     
     reader.onload = (event) => {
       try {
         const text = event.target.result;
+        if (!text || text.trim().length === 0) {
+          reject(new Error('File appears to be empty or contains no readable text'));
+          return;
+        }
         resolve(text);
       } catch (error) {
-        reject(new Error('Failed to read file content'));
+        reject(new Error('Failed to read file content: ' + error.message));
       }
     };
     
     reader.onerror = () => {
-      reject(new Error('Failed to read file'));
+      reject(new Error('Failed to read file. Please ensure the file is not corrupted.'));
+    };
+
+    reader.onabort = () => {
+      reject(new Error('File reading was aborted. Please try again.'));
     };
     
     reader.readAsText(file);
   });
 };
 
-// Make API call to OpenAI
+// Make API call to OpenAI with improved error handling
 const callOpenAI = async (messages, maxTokens = 1000) => {
   const apiKey = getAPIKey();
   
@@ -77,19 +102,45 @@ const callOpenAI = async (messages, maxTokens = 1000) => {
         model: OPENAI_MODEL,
         messages: messages,
         max_tokens: maxTokens,
-        temperature: 0.7
+        temperature: 0.7,
+        top_p: 0.9,
+        frequency_penalty: 0.1,
+        presence_penalty: 0.1
       })
     });
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(`OpenAI API Error: ${response.status} - ${errorData.error?.message || 'Unknown error'}`);
+      const errorMessage = errorData.error?.message || `HTTP ${response.status}`;
+      
+      // Handle specific error cases
+      if (response.status === 401) {
+        throw new Error('Invalid API key. Please check your OpenAI API key.');
+      } else if (response.status === 429) {
+        throw new Error('Rate limit exceeded. Please wait a moment and try again.');
+      } else if (response.status === 500) {
+        throw new Error('OpenAI service error. Please try again later.');
+      } else {
+        throw new Error(`OpenAI API Error: ${errorMessage}`);
+      }
     }
 
     const data = await response.json();
-    return data.choices[0]?.message?.content || '';
+    const content = data.choices[0]?.message?.content;
+    
+    if (!content) {
+      throw new Error('No content received from OpenAI API');
+    }
+    
+    return content;
   } catch (error) {
     console.error('OpenAI API call failed:', error);
+    
+    // Re-throw with more user-friendly messages
+    if (error.message.includes('Failed to fetch')) {
+      throw new Error('Network error. Please check your internet connection.');
+    }
+    
     throw error;
   }
 };
@@ -186,7 +237,7 @@ Key Principles:`;
       .map(principle => principle.replace(/^\d+\.\s*|^[-•]\s*/, '').trim());
 
     // Generate daily content
-    const dailyPrompt = `Based on the book information above, create 5 days of daily content that readers can use for personal development. Each day should have a lesson, exercise, affirmation, and thought. Format as JSON:
+    const dailyPrompt = `Based on the book information above, create 5 days of daily content that readers can use for personal development. Each day should have a lesson, exercise, affirmation, thought, and a relevant passage from the book. Format as JSON:
 
 {
   "dailyContent": [
@@ -195,7 +246,8 @@ Key Principles:`;
       "lesson": "Today's lesson from the book",
       "exercise": "Practical exercise to apply the lesson",
       "affirmation": "Positive affirmation related to the lesson",
-      "thought": "Reflective thought for the day"
+      "thought": "Reflective thought for the day",
+      "passage": "A relevant quote or passage from the book that relates to today's lesson"
     }
   ]
 }`;
@@ -221,35 +273,40 @@ Key Principles:`;
           lesson: `Begin your journey with "${title}". Reflect on what you hope to learn and how you can apply the wisdom from this book.`,
           exercise: "Write down three goals you have for reading this book and how you plan to apply its lessons.",
           affirmation: "I am open to learning and growing through the wisdom of this book.",
-          thought: "Every great journey begins with a single step. What step will you take today?"
+          thought: "Every great journey begins with a single step. What step will you take today?",
+          passage: `"The journey of a thousand miles begins with one step." - Lao Tzu`
         },
         {
           day: 2,
           lesson: "Building Awareness - Practice mindfulness and self-awareness today.",
           exercise: "Notice your thoughts, emotions, and behaviors without judgment. Keep a brief journal of your observations.",
           affirmation: "I am becoming more aware of my thoughts and actions each day.",
-          thought: "Awareness is the first step toward positive change. What patterns do you notice in yourself?"
+          thought: "Awareness is the first step toward positive change. What patterns do you notice in yourself?",
+          passage: `"Awareness is like the sun. When it shines on things, they are transformed." - Thich Nhat Hanh`
         },
         {
           day: 3,
           lesson: "Taking Action - Identify one small action you can take today that aligns with the principles from the book.",
           exercise: "Choose one principle from the book and take a concrete action to apply it in your life today.",
           affirmation: "I have the power to take positive actions that align with my values.",
-          thought: "Small actions compound over time. What small step can you take today?"
+          thought: "Small actions compound over time. What small step can you take today?",
+          passage: `"Action is the foundational key to all success." - Pablo Picasso`
         },
         {
           day: 4,
           lesson: "Reflection and Growth - Take time to reflect on your progress and learning journey.",
           exercise: "Reflect on what you've learned so far. What challenges have you faced? What successes have you experienced?",
           affirmation: "I am growing and learning through reflection and self-awareness.",
-          thought: "Growth often comes through challenges. How have you grown through recent difficulties?"
+          thought: "Growth often comes through challenges. How have you grown through recent difficulties?",
+          passage: `"We do not learn from experience... we learn from reflecting on experience." - John Dewey`
         },
         {
           day: 5,
           lesson: "Sharing Wisdom - Share something you've learned with someone else today.",
           exercise: "Share a key insight or lesson from the book with a friend, family member, or colleague.",
           affirmation: "I have valuable wisdom to share with others, and sharing helps me learn more deeply.",
-          thought: "Teaching others is one of the best ways to learn. Who can you share your insights with today?"
+          thought: "Teaching others is one of the best ways to learn. Who can you share your insights with today?",
+          passage: `"The greatest good you can do for another is not just to share your riches but to reveal to them their own." - Benjamin Disraeli`
         }
       ];
     }
@@ -308,7 +365,7 @@ Current days of content: ${currentDays}
 Generate ${additionalDays} additional days of daily content.`;
 
     // Generate additional daily content
-    const additionalPrompt = `Based on the book "${title}" by ${author}, create ${additionalDays} additional days of daily content for personal development. Each day should have a lesson, exercise, affirmation, and thought. Format as JSON:
+    const additionalPrompt = `Based on the book "${title}" by ${author}, create ${additionalDays} additional days of daily content for personal development. Each day should have a lesson, exercise, affirmation, thought, and a relevant passage from the book. Format as JSON:
 
 {
   "dailyContent": [
@@ -317,14 +374,16 @@ Generate ${additionalDays} additional days of daily content.`;
       "lesson": "Day ${currentDays + 1} lesson from the book",
       "exercise": "Day ${currentDays + 1} practical exercise",
       "affirmation": "Day ${currentDays + 1} positive affirmation",
-      "thought": "Day ${currentDays + 1} reflective thought"
+      "thought": "Day ${currentDays + 1} reflective thought",
+      "passage": "Day ${currentDays + 1} relevant quote or passage from the book"
     },
     {
       "day": ${currentDays + 2},
       "lesson": "Day ${currentDays + 2} lesson from the book",
       "exercise": "Day ${currentDays + 2} practical exercise",
       "affirmation": "Day ${currentDays + 2} positive affirmation",
-      "thought": "Day ${currentDays + 2} reflective thought"
+      "thought": "Day ${currentDays + 2} reflective thought",
+      "passage": "Day ${currentDays + 2} relevant quote or passage from the book"
     }
   ]
 }`;
@@ -370,7 +429,8 @@ const generateFallbackAdditionalContent = (bookData, currentDays, additionalDays
       lesson: `Day ${dayNumber}: Continue your journey with "${title}". Focus on applying the principles you've learned so far.`,
       exercise: `Day ${dayNumber}: Practice one of the key principles from the book for 15 minutes today.`,
       affirmation: `Day ${dayNumber}: I am growing and learning every day through the wisdom of great books.`,
-      thought: `Day ${dayNumber}: Reflect on how the lessons from "${title}" are shaping your daily life.`
+      thought: `Day ${dayNumber}: Reflect on how the lessons from "${title}" are shaping your daily life.`,
+      passage: `Day ${dayNumber}: "The more you read, the more things you will know. The more that you learn, the more places you'll go." - Dr. Seuss`
     });
   }
 

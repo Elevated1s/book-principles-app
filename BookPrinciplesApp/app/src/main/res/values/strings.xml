@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Book Principles</string>
+    <string name="asset_statements">[{"include": "https://bright-crepe-8aea7d.netlify.app/.well-known/assetlinks.json"}]</string>
+</resources>

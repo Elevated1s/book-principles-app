@@ -66,7 +66,8 @@ const EnhancedDailyContent = ({ book, onClose }) => {
           lesson: dayContent.lesson || dayContent.title || 'No lesson available',
           exercise: dayContent.exercise || dayContent.content || 'No exercise available',
           affirmation: dayContent.affirmation || 'Focus on applying today\'s lesson',
-          thought: dayContent.thought || 'Reflect on how this applies to your life'
+          thought: dayContent.thought || 'Reflect on how this applies to your life',
+          passage: dayContent.passage || 'No passage available'
         };
       }
     } else if (book.dailyContent.lessons && Array.isArray(book.dailyContent.lessons)) {
@@ -74,7 +75,8 @@ const EnhancedDailyContent = ({ book, onClose }) => {
         lesson: book.dailyContent.lessons[day - 1] || 'No lesson available',
         exercise: book.dailyContent.exercises[day - 1] || 'No exercise available',
         affirmation: book.dailyContent.affirmations[day - 1] || 'No affirmation available',
-        thought: book.dailyContent.thoughts[day - 1] || 'No thought available'
+        thought: book.dailyContent.thoughts[day - 1] || 'No thought available',
+        passage: book.dailyContent.passages ? book.dailyContent.passages[day - 1] : 'No passage available'
       };
     }
     
@@ -82,7 +84,8 @@ const EnhancedDailyContent = ({ book, onClose }) => {
       lesson: 'No lesson available',
       exercise: 'No exercise available',
       affirmation: 'No affirmation available',
-      thought: 'No thought available'
+      thought: 'No thought available',
+      passage: 'No passage available'
     };
   };
 
@@ -181,6 +184,7 @@ const EnhancedDailyContent = ({ book, onClose }) => {
     setShowShareModal(false);
   };
 
+  // Get daily content for current day
   const dailyContent = getDailyContent(currentDay);
 
   const styles = {
@@ -505,6 +509,10 @@ const EnhancedDailyContent = ({ book, onClose }) => {
             <div style={styles.contentCard}>
               <div style={styles.contentTitle}>🤔 Reflection</div>
               <div style={styles.contentText}>{dailyContent?.thought}</div>
+            </div>
+            <div style={styles.contentCard}>
+              <div style={styles.contentTitle}>📖 Passage</div>
+              <div style={styles.contentText}>{dailyContent?.passage}</div>
             </div>
           </div>
 

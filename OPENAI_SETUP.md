@@ -2,7 +2,7 @@
 
 ## 🤖 **Real AI Integration Setup**
 
-Your app now supports real AI processing using OpenAI's GPT models! Here's how to set it up:
+Your app now supports real AI processing using OpenAI's latest models! Here's how to set it up:
 
 ## **Step 1: Get an OpenAI API Key**
 
@@ -18,7 +18,7 @@ Your app now supports real AI processing using OpenAI's GPT models! Here's how t
 2. **Add your API key** to the file:
 
 ```env
-REACT_APP_OPENAI_API_KEY=sk-your_actual_api_key_here
+REACT_APP_OPENAI_API_KEY=sk-your_openai_api_key_here
 ```
 
 3. **Save the file**
@@ -37,30 +37,40 @@ npm start
 
 1. **Go to your app**: `http://localhost:3000`
 2. **Sign in** to your account
-3. **Go to "Upload Book"**
+3. **Go to "Upload Book"** or **"AI Settings"**
 4. **Check the AI Status indicator** - it should show:
-   - ✅ **Green**: "OpenAI API key is configured"
-   - ⚠️ **Yellow**: "OpenAI API key not found" (if not configured)
+   - ✅ **Green**: "AI Analysis Enabled" with detailed status
+   - ⚠️ **Yellow**: "AI Analysis Limited" with helpful guidance
 
 ## **How It Works**
 
 ### **With OpenAI API Key Configured:**
-- ✅ **Real AI Analysis**: Books are analyzed using GPT-3.5-turbo
+- ✅ **Real AI Analysis**: Books are analyzed using GPT-4o-mini (latest model)
 - ✅ **Actual Content**: Summaries, principles, and daily content are AI-generated
 - ✅ **File Processing**: Text files are processed for content analysis
 - ✅ **Smart Fallbacks**: If AI fails, falls back to quality simulated content
+- ✅ **Enhanced Error Handling**: User-friendly error messages and recovery
 
 ### **Without OpenAI API Key:**
 - ⚠️ **Fallback Mode**: Uses high-quality simulated content
 - ⚠️ **No File Processing**: File content is not analyzed
 - ⚠️ **Generic Content**: Content is based on book title/author only
+- ⚠️ **Still Fully Functional**: App works completely without AI
 
 ## **Cost Information**
 
-- **GPT-3.5-turbo**: ~$0.002 per 1K tokens
-- **Typical book analysis**: ~$0.01-0.05 per book
+- **GPT-4o-mini**: ~$0.00015 per 1K tokens (very cost-effective!)
+- **Typical book analysis**: ~$0.001-0.005 per book (much cheaper than before)
 - **Free tier**: $5 credit for new users
 - **Pay-as-you-go**: No monthly fees
+
+## **New Features**
+
+🚀 **GPT-4o-mini**: Latest model with better performance and lower costs  
+🔍 **Enhanced Error Handling**: Clear, actionable error messages  
+📊 **Detailed Status**: Real-time AI configuration status with helpful guidance  
+🔄 **Smart Fallbacks**: Graceful degradation when AI is unavailable  
+📱 **Better UI**: Improved status indicators and user guidance  
 
 ## **Security Notes**
 

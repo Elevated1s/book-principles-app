@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.digitalelevations.bookprinciples.app-mergeDebugResources-20:/values-v24/values-v24.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\curti\\.gradle\\caches\\8.14\\transforms\\c35ce0d5b7b9f346ffa6b8dcd4f28405\\transformed\\appcompat-1.6.1\\res\\values-v24\\values-v24.xml",
+                    "from": {
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,212",
+                        "endColumns": "156,134",
+                        "endOffsets": "207,342"
+                    }
+                }
+            ]
+        }
+    ]
+}

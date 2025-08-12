@@ -1,11 +1,24 @@
-# OpenAI API Configuration
-# Get your API key from: https://platform.openai.com/api-keys
+# Environment Variables for Book Principles App
+# Copy this file to .env and fill in your actual values
+
+# Firebase Configuration
+REACT_APP_FIREBASE_API_KEY=your_firebase_api_key_here
+REACT_APP_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+REACT_APP_FIREBASE_PROJECT_ID=your_project_id
+REACT_APP_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID=123456789
+REACT_APP_FIREBASE_APP_ID=your_app_id
+
+# OpenAI Configuration
 REACT_APP_OPENAI_API_KEY=your_openai_api_key_here
 
-# Firebase Configuration (already configured in firebaseConfig.js)
-# REACT_APP_FIREBASE_API_KEY=your_firebase_api_key
-# REACT_APP_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-# REACT_APP_FIREBASE_PROJECT_ID=your_project_id
-# REACT_APP_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
-# REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-# REACT_APP_FIREBASE_APP_ID=your_app_id 
+# Google Sheets Integration (Optional)
+REACT_APP_GOOGLE_SHEETS_API_KEY=your_google_sheets_api_key_here
+REACT_APP_SPREADSHEET_ID=your_spreadsheet_id_here
+
+# Notes:
+# - Firebase config is required for authentication and database
+# - OpenAI API key is required for AI-powered book analysis
+# - Google Sheets integration is optional for storing user signup data
+# - All keys starting with REACT_APP_ will be available in the browser
+# - Never commit your actual .env file to version control 

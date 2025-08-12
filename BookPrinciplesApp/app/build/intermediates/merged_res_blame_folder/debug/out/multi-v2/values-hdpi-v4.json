@@ -1,0 +1,20 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.digitalelevations.bookprinciples.app-mergeDebugResources-20:/values-hdpi-v4/values-hdpi-v4.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\curti\\.gradle\\caches\\8.14\\transforms\\c35ce0d5b7b9f346ffa6b8dcd4f28405\\transformed\\appcompat-1.6.1\\res\\values-hdpi-v4\\values-hdpi-v4.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "6",
+                        "endColumns": "13",
+                        "endOffsets": "327"
+                    }
+                }
+            ]
+        }
+    ]
+}

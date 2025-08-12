@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Principles App Icon Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .icon-preview {
+            text-align: center;
+            margin: 20px 0;
+        }
+        canvas {
+            border: 2px solid white;
+            border-radius: 10px;
+            margin: 10px;
+        }
+        .download-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 16px;
+        }
+        .download-btn:hover {
+            background: #45a049;
+        }
+        .instructions {
+            background: rgba(255,255,255,0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📱 Book Principles App Icon Generator</h1>
+        
+        <div class="instructions">
+            <h3>🎨 Icon Design:</h3>
+            <p>This tool creates a simple app icon with your brand colors and "BP" letters.</p>
+            <p>Colors: #667eea (blue) and #764ba2 (purple)</p>
+        </div>
+
+        <div class="icon-preview">
+            <h3>192x192 Icon (for manifest)</h3>
+            <canvas id="icon192" width="192" height="192"></canvas>
+            <br>
+            <button class="download-btn" onclick="downloadIcon('icon192', 'logo192.png')">Download 192x192</button>
+        </div>
+
+        <div class="icon-preview">
+            <h3>512x512 Icon (for Play Store)</h3>
+            <canvas id="icon512" width="512" height="512"></canvas>
+            <br>
+            <button class="download-btn" onclick="downloadIcon('icon512', 'logo512.png')">Download 512x512</button>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 Next Steps:</h3>
+            <ol>
+                <li>Download both icons</li>
+                <li>Place them in your <code>public</code> folder</li>
+                <li>Deploy to Netlify</li>
+                <li>Convert to Android app with Bubblewrap</li>
+                <li>Upload to Google Play Store</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function drawIcon(canvasId, size) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#667eea');
+            gradient.addColorStop(1, '#764ba2');
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            // Book icon
+            const bookSize = size * 0.4;
+            const bookX = (size - bookSize) / 2;
+            const bookY = (size - bookSize) / 2;
+            
+            // Book cover
+            ctx.fillStyle = 'rgba(255,255,255,0.9)';
+            ctx.fillRect(bookX, bookY, bookSize, bookSize);
+            
+            // Book pages
+            ctx.fillStyle = 'rgba(255,255,255,0.7)';
+            ctx.fillRect(bookX + size * 0.02, bookY + size * 0.02, bookSize - size * 0.04, bookSize - size * 0.04);
+            
+            // BP letters
+            ctx.fillStyle = '#667eea';
+            ctx.font = `bold ${size * 0.25}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('BP', size / 2, size / 2);
+            
+            // Add some shine
+            ctx.fillStyle = 'rgba(255,255,255,0.3)';
+            ctx.beginPath();
+            ctx.arc(size * 0.3, size * 0.3, size * 0.1, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function downloadIcon(canvasId, filename) {
+            const canvas = document.getElementById(canvasId);
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        // Generate icons when page loads
+        window.onload = function() {
+            drawIcon('icon192', 192);
+            drawIcon('icon512', 512);
+        };
+    </script>
+</body>
+</html>
